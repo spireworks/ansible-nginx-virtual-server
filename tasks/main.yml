@@ -1,0 +1,37 @@
+---
+- name: apply virtual server template
+  template:
+    src: virtual-server
+    dest: "{{ nginx_virtual_server_file }}"
+  become: yes
+  tags:
+    - nginx_virtual_server_template
+  notify: nginx restart
+
+- name: remove default site for nginx
+  file:
+    dest: /etc/nginx/sites-enabled/default
+    state: absent
+  become: yes
+  tags: nginx_config
+  notify: nginx restart
+
+- name: uncomment server_names_hash_bucket_size config from nginx.conf
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: 'server_names_hash_bucket_size'
+    line: "\tserver_names_hash_bucket_size 128;"
+  notify: nginx restart
+  become: yes
+  tags:
+    - nginx_config
+
+- name: uncomment include passenger.conf from nginx.conf
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: 'include /etc/nginx/passenger.conf;'
+    line: "\tinclude /etc/nginx/passenger.conf;"
+  notify: nginx restart
+  become: yes
+  tags:
+    - passenger_config

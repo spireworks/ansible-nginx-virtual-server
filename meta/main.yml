@@ -1,0 +1,4 @@
+---
+dependencies:
+  - role: ansible-nginx-passenger
+    become: yes

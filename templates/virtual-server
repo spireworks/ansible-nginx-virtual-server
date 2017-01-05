@@ -1,0 +1,10 @@
+server {
+  listen 80;
+
+  server_name {{ nginx_virtual_server_name }};
+  root {{ nginx_virtual_server_root }};
+  passenger_enabled on;
+  rails_env {{ nginx_virtual_server_env }};
+
+  {{ nginx_virtual_server_extra_config }}
+}
